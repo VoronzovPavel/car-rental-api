@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: Car Rental API
+  version: "1.0"
+paths:
+  /user/register:
+    post:
+      summary: User Registration
+      description: Registers a new user with document upload (passport and driver license) and verification via the Ministry of Internal Affairs (MVD) API.
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: pavel_vorontsov
+                  description: User's login
+                password:
+                  type: string
+                  format: password
+                  example: StrongPassword123
+                  description: User's password
+                email:
+                  type: string
+                  format: email
+                  example: vorontsov.pavel@yandex.ru
+                  description: User's email address
+                passport:
+                  type: string
+                  format: binary
+                  description: Passport scan (PDF format)
+                driverLicense:
+                  type: string
+                  format: binary
+                  description: Driver license scan (PDF format)
+      responses:
+        "200":
+          description: Successful Registration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                    example: 12345
+                  status:
+                    type: string
+                    example: verified
+        "400":
+          description: Invalid input format
+        "409":
+          description: Email already exists
+        "500":
+          description: Verification error via MVD API
